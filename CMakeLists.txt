@@ -6,7 +6,7 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
-set(SOURCES ${SRC_DIR}/main.cpp ${SRC_DIR}/GGApplication.cpp)
+set(SOURCES ${SRC_DIR}/main.cpp ${SRC_DIR}/GGApplication.cpp ${SRC_DIR}/GGGraphics.cpp)
 
 add_executable(GreatGine ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})
@@ -18,6 +18,7 @@ find_package(glfw3 REQUIRED)
 target_link_libraries(GreatGine	glfw)
 
 
+# GLAD
 set(GLAD_DIR "${LIB_DIR}/glad")
 add_library("glad" "${GLAD_DIR}/src/glad.c")
 target_include_directories("glad" PRIVATE "${GLAD_DIR}/include")

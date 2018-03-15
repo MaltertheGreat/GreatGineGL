@@ -1,8 +1,22 @@
+#include "GGApplication.h"
+
+#include <exception>
 #include <iostream>
 
 int main()
 {
-	std::cout << "Hello, world!" << std::endl;
+	GGApplication app;
+
+	try
+	{
+		app.Run();
+	}
+	catch(std::exception& e)
+	{
+		std::cerr << "Error occured!" << std::endl << e.what() << std::endl;
+
+		return -1;
+	}
 
 	return 0;
 }
