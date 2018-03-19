@@ -6,12 +6,18 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
-set(SOURCES ${SRC_DIR}/main.cpp ${SRC_DIR}/GGApplication.cpp ${SRC_DIR}/GGGraphics.cpp)
+set(SOURCES ${SRC_DIR}/main.cpp ${SRC_DIR}/GGApplication.cpp ${SRC_DIR}/GGOGL.cpp ${SRC_DIR}/GGGraphics.cpp ${SRC_DIR}/GGShader.cpp)
+
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 add_executable(GreatGine ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
 
+# Shader files
+configure_file(${SRC_DIR}/basic.vs basic.vs COPYONLY)
+configure_file(${SRC_DIR}/basic.fs basic.fs COPYONLY)
 
 # GLFW
 find_package(glfw3 REQUIRED)
@@ -24,3 +30,7 @@ add_library("glad" "${GLAD_DIR}/src/glad.c")
 target_include_directories("glad" PRIVATE "${GLAD_DIR}/include")
 target_include_directories(${PROJECT_NAME} PRIVATE "${GLAD_DIR}/include")
 target_link_libraries(${PROJECT_NAME} "glad" "${CMAKE_DL_LIBS}")
+
+# GLM
+set(GLM_DIR "${LIB_DIR}/glm")
+target_include_directories(${PROJECT_NAME} PRIVATE "${GLM_DIR}/include")

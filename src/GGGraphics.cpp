@@ -4,19 +4,6 @@
 #include <GLFW/glfw3.h>
 #include <stdexcept>
 
-const char *vertexShaderSource = "#version 330 core\n"
-	"layout (location = 0) in vec3 aPos;\n"
-	"void main()\n"
-	"{\n"
-	"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-	"}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
-	"out vec4 FragColor;\n"
-	"void main()\n"
-	"{\n"
-	"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-	"}\n\0";
-
 GGGraphics::GGGraphics(GLFWwindow* window)
 {
 	glfwSetFramebufferSizeCallback(window, FramebufferSize);
@@ -26,45 +13,6 @@ GGGraphics::GGGraphics(GLFWwindow* window)
 		glfwTerminate();
 		throw std::runtime_error("Failed to initialize GLAD");
 	}
-
-	// Vertex shader
-	unsigned vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-	glCompileShader(vertexShader);
-	int success;
-	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		throw std::runtime_error("infoLog");
-	}
-
-	// Fragment shader
-	unsigned fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-	glCompileShader(fragmentShader);
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		throw std::runtime_error("infoLog");
-	}
-
-	// Shader program
-	m_shaderProgram = glCreateProgram();
-	glAttachShader(m_shaderProgram, vertexShader);
-	glAttachShader(m_shaderProgram, fragmentShader);
-	glLinkProgram(m_shaderProgram);
-	glGetProgramiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if (!success)
-	{
-		glGetProgramInfoLog(vertexShader, 512, NULL, infoLog);
-		throw std::runtime_error("infoLog");
-	}
-
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
 
 	// Vertex array
 	glGenVertexArrays(1, &m_vao);
@@ -94,7 +42,7 @@ void GGGraphics::Render(GLFWwindow* window)
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glUseProgram(m_shaderProgram);
+	m_shader.Set();
 	glBindVertexArray(m_vao);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 

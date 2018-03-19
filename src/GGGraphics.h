@@ -1,5 +1,8 @@
 #pragma once
 
+#include "GGOGL.h"
+#include "GGShader.h"
+
 class GLFWwindow;
 
 class GGGraphics
@@ -15,7 +18,8 @@ private:
 	static void FramebufferSize(GLFWwindow* window, int width, int height);
 
 private:
+	GGOGL m_ogl;
 	unsigned m_vao;
 	unsigned m_vbo;
-	unsigned m_shaderProgram;
+	GGShader m_shader;
 };
