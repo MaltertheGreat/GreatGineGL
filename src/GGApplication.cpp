@@ -9,7 +9,10 @@ GGApplication::GGApplication() :
 	m_graphics(m_window),
 	m_input(m_window)
 {
-	m_input.RegisterKeyHandler(this);
+	m_input.RegisterKeyHandler([this](int key) {
+		if (key == GLFW_KEY_ESCAPE)
+			glfwSetWindowShouldClose(m_window, true);
+	});
 }
 
 void GGApplication::Run()
@@ -33,12 +36,6 @@ void GGApplication::Update()
 void GGApplication::Render()
 {
 	m_graphics.Render(m_window);
-}
-
-void GGApplication::KeyPressed(int key)
-{
-	if (key == GLFW_KEY_ESCAPE)
-		glfwSetWindowShouldClose(m_window, true);
 }
 
 GLFWwindow* GGApplication::CreateWindow()

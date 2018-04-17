@@ -5,16 +5,13 @@
 
 class GLFWwindow;
 
-class GGApplication : public GGKeyHandler
+class GGApplication
 {
 public:
 	GGApplication();
 
 public:
 	void Run();
-
-protected:
-	virtual void KeyPressed(int key) override;
 
 private:
 	void Update();

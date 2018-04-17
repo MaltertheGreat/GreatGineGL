@@ -21,7 +21,7 @@ void GGInput::key_callback(GLFWwindow* window, int key, int scancode, int action
 	std::cerr << key << std::endl;
 	if (action == GLFW_PRESS)
 		for (auto& handler : input->m_keyHandlers)
-			handler->KeyPressed(key);
+			handler(key);
 	else if (action == GLFW_RELEASE)
 		return;
 }
@@ -40,7 +40,7 @@ void GGInput::cursor_position_callback(GLFWwindow* window, double xpos, double y
 	input->m_mouse_y = ypos;
 }
 
-void GGInput::RegisterKeyHandler(GGKeyHandler* handler)
+void GGInput::RegisterKeyHandler(std::function<void(int)> handler)
 {
 	m_keyHandlers.push_back(handler);
 }
