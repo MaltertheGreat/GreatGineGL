@@ -8,7 +8,6 @@ GGOGL::GGOGL()
 {
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
-		glfwTerminate();
 		throw std::runtime_error("Failed to initialize GLAD");
 	}
 }

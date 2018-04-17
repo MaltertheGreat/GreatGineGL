@@ -1,4 +1,5 @@
 #include "GGShader.h"
+#include <glm/gtc/type_ptr.hpp>
 
 GGShader::GGShader()
 {
@@ -23,6 +24,9 @@ GGShader::GGShader()
 		throw std::runtime_error("GGShader");
 	}
 
+	m_modelMatrix = glGetUniformLocation(m_id, "model");
+	m_viewProjMatrix = glGetUniformLocation(m_id, "viewProj");
+
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 }
@@ -30,6 +34,16 @@ GGShader::GGShader()
 void GGShader::Set()
 {
 	glUseProgram(m_id);
+}
+
+void GGShader::UpdateModelMatrix(const glm::mat4& model)
+{
+	glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(model));
+}
+
+void GGShader::UpdateViewProjMatrix(const glm::mat4& viewProj)
+{
+	glUniformMatrix4fv(m_viewProjMatrix, 1, GL_FALSE, glm::value_ptr(viewProj));
 }
 
 unsigned GGShader::CompileShader(const std::string& fileName, GLenum shaderType)

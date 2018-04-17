@@ -1,10 +1,11 @@
 #pragma once
 
 #include "GGGraphics.h"
+#include "GGInput.h"
 
 class GLFWwindow;
 
-class GGApplication
+class GGApplication : public GGKeyHandler
 {
 public:
 	GGApplication();
@@ -12,8 +13,10 @@ public:
 public:
 	void Run();
 
+protected:
+	virtual void KeyPressed(int key) override;
+
 private:
-	void ProcessInput();
 	void Update();
 	void Render();
 
@@ -22,4 +25,5 @@ private:
 private:
 	GLFWwindow* m_window;
 	GGGraphics m_graphics;
+	GGInput m_input;
 };

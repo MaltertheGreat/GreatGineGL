@@ -2,39 +2,26 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/gtc/matrix_transform.hpp>
 #include <stdexcept>
+
+static int m_window_width = 800;
+static int m_window_height = 600;
 
 GGGraphics::GGGraphics(GLFWwindow* window)
 {
 	glfwSetFramebufferSizeCallback(window, FramebufferSize);
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-	{
-		glfwTerminate();
-		throw std::runtime_error("Failed to initialize GLAD");
-	}
-
-	// Vertex array
-	glGenVertexArrays(1, &m_vao);
-	glGenBuffers(1, &m_vbo);
-	glBindVertexArray(m_vao);
-
-	// Triangle vertex buffer
-	float vertices[] =
-	{
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f,  0.5f, 0.0f
-	};
-
-	glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
 }
 
-void GGGraphics::Update()
+void GGGraphics::Update(GLFWwindow* window)
 {
+	UpdateCameraPos(window);
+
+	m_camera.UpdateView(m_camera_pos, m_camera_rot);
+	m_camera.UpdateProj(45.0f, m_window_width/static_cast<float>(m_window_height), 0.1f, 100.0f);
+
+	m_shader.UpdateModelMatrix(glm::translate(glm::mat4(), {0.0f, 0.0f, 0.0f}));
+	m_shader.UpdateViewProjMatrix(m_camera.GetViewProj());
 }
 
 void GGGraphics::Render(GLFWwindow* window)
@@ -43,13 +30,35 @@ void GGGraphics::Render(GLFWwindow* window)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_shader.Set();
-	glBindVertexArray(m_vao);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	m_mesh.Render();
 
 	glfwSwapBuffers(window);
 }
 
+void GGGraphics::UpdateCameraPos(GLFWwindow* window)
+{
+	glm::vec3 front = {
+		sin(m_camera_rot.y)*cos(m_camera_rot.x),
+		sin(m_camera_rot.x),
+		cos(m_camera_rot.y)*cos(m_camera_rot.x)};
+	front = glm::normalize(front);
+	glm::vec3 up = {0.0f, 1.0f, 0.0f};
+
+	float camera_speed = 0.01f;
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		m_camera_pos += camera_speed*front;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		m_camera_pos -= camera_speed*front;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		m_camera_pos += glm::normalize(glm::cross(front, up))*camera_speed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		m_camera_pos -= glm::normalize(glm::cross(front, up))*camera_speed;
+}
+
 void GGGraphics::FramebufferSize(GLFWwindow* window, int width, int height)
 {
+	m_window_width = width;
+	m_window_height = height;
 	glViewport(0, 0, width, height);
 }

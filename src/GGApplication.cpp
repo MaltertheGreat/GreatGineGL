@@ -6,15 +6,16 @@
 
 GGApplication::GGApplication() :
 	m_window(CreateWindow()),
-	m_graphics(m_window)
+	m_graphics(m_window),
+	m_input(m_window)
 {
+	m_input.RegisterKeyHandler(this);
 }
 
 void GGApplication::Run()
 {
 	while(!glfwWindowShouldClose(m_window))
 	{
-		ProcessInput();
 		Update();
 		Render();
 
@@ -26,12 +27,18 @@ void GGApplication::Run()
 
 void GGApplication::Update()
 {
-	m_graphics.Update();
+	m_graphics.Update(m_window);
 }
 
 void GGApplication::Render()
 {
 	m_graphics.Render(m_window);
+}
+
+void GGApplication::KeyPressed(int key)
+{
+	if (key == GLFW_KEY_ESCAPE)
+		glfwSetWindowShouldClose(m_window, true);
 }
 
 GLFWwindow* GGApplication::CreateWindow()
@@ -51,10 +58,4 @@ GLFWwindow* GGApplication::CreateWindow()
 	glfwMakeContextCurrent(window);
 
 	return window;
-}
-
-void GGApplication::ProcessInput()
-{
-	if (glfwGetKey(m_window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(m_window, true);
 }
