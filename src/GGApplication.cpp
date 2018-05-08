@@ -6,10 +6,10 @@
 
 GGApplication::GGApplication() :
 	m_window(CreateWindow()),
-	m_graphics(m_window),
-	m_input(m_window)
+	m_input(m_window),
+	m_graphics(m_window, m_input)
 {
-	m_input.RegisterKeyHandler([this](int key) {
+	m_input.RegisterKeyPressedHandler([this](int key) {
 		if (key == GLFW_KEY_ESCAPE)
 			glfwSetWindowShouldClose(m_window, true);
 	});

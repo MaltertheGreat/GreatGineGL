@@ -20,27 +20,39 @@ void GGInput::key_callback(GLFWwindow* window, int key, int scancode, int action
 
 	std::cerr << key << std::endl;
 	if (action == GLFW_PRESS)
-		for (auto& handler : input->m_keyHandlers)
+		for (auto& handler : input->m_key_pressed_handlers)
 			handler(key);
 	else if (action == GLFW_RELEASE)
+		for (auto& handler : input->m_key_released_handlers)
+			handler(key);
 		return;
 }
 
 void GGInput::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	std::cerr << "ok!" << std::endl;
 	GGInput* input = static_cast<GGInput*>(glfwGetWindowUserPointer(window));
 
-	double  xoffset = xpos - input->m_mouse_x;
+	double xoffset = xpos - input->m_mouse_x;
 	double yoffset = input->m_mouse_y - ypos;
-
-	std::cerr << xoffset << ", " << yoffset << std::endl;
 
 	input->m_mouse_x = xpos;
 	input->m_mouse_y = ypos;
+
+	for (auto& handler : input->m_mouse_moved_handlers)
+		handler(xoffset, yoffset);
+}
+void GGInput::RegisterKeyPressedHandler(std::function<void(int)> handler)
+{
+	m_key_pressed_handlers.push_back(handler);
 }
 
-void GGInput::RegisterKeyHandler(std::function<void(int)> handler)
+void GGInput::RegisterKeyReleasedHandler(std::function<void(int)> handler)
 {
-	m_keyHandlers.push_back(handler);
+	m_key_released_handlers.push_back(handler);
+}
+
+
+void GGInput::RegisterMouseMoveHandler(std::function<void(double, double)> handler)
+{
+	m_mouse_moved_handlers.push_back(handler);
 }

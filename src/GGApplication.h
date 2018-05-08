@@ -21,6 +21,6 @@ private:
 
 private:
 	GLFWwindow* m_window;
-	GGGraphics m_graphics;
 	GGInput m_input;
+	GGGraphics m_graphics;
 };

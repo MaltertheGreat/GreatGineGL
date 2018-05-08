@@ -12,20 +12,16 @@ class GLFWwindow;
 class GGGraphics
 {
 public:
-	GGGraphics(GLFWwindow* window);
+	GGGraphics(GLFWwindow* window, GGInput& input);
 
 public:
 	void Update(GLFWwindow* window);
 	void Render(GLFWwindow* window);
 
 private:
-	void UpdateCameraPos(GLFWwindow* window);
-
 	static void FramebufferSize(GLFWwindow* window, int width, int height);
 
 private:
-	glm::vec3 m_camera_pos;
-	glm::vec3 m_camera_rot;
 	GGOGL m_ogl;
 	GGShader m_shader;
 	GGCamera m_camera;
