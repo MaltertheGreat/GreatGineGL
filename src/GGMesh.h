@@ -1,3 +1,5 @@
+#pragma once
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <vector>
@@ -10,11 +12,14 @@ public:
 	struct GGVertex
 	{
 		glm::vec3 position;
+		glm::vec3 normal;
+		glm::vec3 color;
 	};
+	typedef UINT GGIndex;
 
 public:
 	GGMesh();
-	//GGMesh(std::vector<GGVertex> vertices, std::vector<UINT> indices);
+	GGMesh(const std::vector<GGVertex>& vertices, const std::vector<GGIndex>& indices);
 
 public:
 	void Render();

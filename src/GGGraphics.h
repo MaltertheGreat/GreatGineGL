@@ -7,6 +7,8 @@
 #include "GGCamera.h"
 #include "GGMesh.h"
 
+#include "GGChunkModel.h"
+
 class GLFWwindow;
 
 class GGGraphics
@@ -26,4 +28,5 @@ private:
 	GGShader m_shader;
 	GGCamera m_camera;
 	GGMesh m_mesh;
+	GGChunkModel m_chunk;
 };

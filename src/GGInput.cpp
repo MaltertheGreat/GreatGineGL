@@ -2,7 +2,6 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 
 GGInput::GGInput(GLFWwindow* window)
 {
@@ -18,14 +17,12 @@ void GGInput::key_callback(GLFWwindow* window, int key, int scancode, int action
 {
 	GGInput* input = static_cast<GGInput*>(glfwGetWindowUserPointer(window));
 
-	std::cerr << key << std::endl;
 	if (action == GLFW_PRESS)
 		for (auto& handler : input->m_key_pressed_handlers)
 			handler(key);
 	else if (action == GLFW_RELEASE)
 		for (auto& handler : input->m_key_released_handlers)
 			handler(key);
-		return;
 }
 
 void GGInput::cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
@@ -41,6 +38,7 @@ void GGInput::cursor_position_callback(GLFWwindow* window, double xpos, double y
 	for (auto& handler : input->m_mouse_moved_handlers)
 		handler(xoffset, yoffset);
 }
+
 void GGInput::RegisterKeyPressedHandler(std::function<void(int)> handler)
 {
 	m_key_pressed_handlers.push_back(handler);
@@ -50,7 +48,6 @@ void GGInput::RegisterKeyReleasedHandler(std::function<void(int)> handler)
 {
 	m_key_released_handlers.push_back(handler);
 }
-
 
 void GGInput::RegisterMouseMoveHandler(std::function<void(double, double)> handler)
 {

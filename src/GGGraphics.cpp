@@ -29,7 +29,7 @@ void GGGraphics::Render(GLFWwindow* window)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_shader.Set();
-	m_mesh.Render();
+	m_chunk.Render();
 
 	glfwSwapBuffers(window);
 }
