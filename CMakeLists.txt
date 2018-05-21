@@ -31,5 +31,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE "${GLAD_DIR}/include")
 target_link_libraries(${PROJECT_NAME} "glad" "${CMAKE_DL_LIBS}")
 
 # GLM
-set(GLM_DIR "${LIB_DIR}/glm")
-target_include_directories(${PROJECT_NAME} PRIVATE "${GLM_DIR}/include")
+find_package(glm REQUIRED)
+target_link_libraries(GreatGine	glm)
