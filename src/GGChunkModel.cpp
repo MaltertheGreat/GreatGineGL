@@ -1,4 +1,5 @@
 #include "GGChunkModel.h"
+#include "GGChunk.h"
 
 GGChunkModel::GGChunkModel() :
 	m_mesh(GenerateMesh())
@@ -13,15 +14,15 @@ GGMesh GGChunkModel::GenerateMesh()
 {
 	std::vector<GGMesh::GGVertex> vertices;
 	std::vector<GGMesh::GGIndex> indices;
-	std::vector<GGVoxel> voxels(DIAMETER*DIAMETER*DIAMETER);
+	GGChunk chunk = GGChunk::GenetateRandom();
 
-	for(UINT x = 0; x < DIAMETER; ++x)
+	for(UINT x = 0; x < GGChunk::DIAMETER; ++x)
 	{
-		for(UINT y = 0; y < DIAMETER; ++y)
+		for(UINT y = 0; y < GGChunk::DIAMETER; ++y)
 		{
-			for(UINT z = 0; z < DIAMETER; ++z)
+			for(UINT z = 0; z < GGChunk::DIAMETER; ++z)
 			{
-				GenerateVoxel(x, y, z, voxels, vertices, indices);
+				GenerateVoxel(x, y, z, chunk, vertices, indices);
 			}
 		}
 	}
@@ -29,9 +30,9 @@ GGMesh GGChunkModel::GenerateMesh()
 	return GGMesh(vertices, indices);
 }
 
-void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const std::vector<GGVoxel>& voxels, std::vector<GGMesh::GGVertex>& vertices, std::vector<GGMesh::GGIndex>& indices)
+void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const GGChunk& chunk, std::vector<GGMesh::GGVertex>& vertices, std::vector<GGMesh::GGIndex>& indices)
 {
-	glm::uvec3 chunkDiameter = {DIAMETER, DIAMETER, DIAMETER};
+	glm::uvec3 chunkDiameter = {GGChunk::DIAMETER, GGChunk::DIAMETER, GGChunk::DIAMETER};
 	const glm::vec3 diameter =
 	{
 		1.0f / chunkDiameter.x,
@@ -54,7 +55,7 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const std::vector<GGVox
 	};
 
 	UINT voxelIndex = x * chunkDiameter.y * chunkDiameter.z + y * chunkDiameter.z + z;
-	if( voxels[voxelIndex].element == 0 )
+	if( chunk.voxels[voxelIndex].element == 0 )
 	{
 		return;
 	}
@@ -63,7 +64,7 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const std::vector<GGVox
 	glm::vec3 color = {0.8f, 0.1f, 0.0f};
 
 	// Right
-	if( (x < (chunkDiameter.x - 1u) && (voxels[voxelIndex + (chunkDiameter.y * chunkDiameter.z)].element == 0)) || (x == (chunkDiameter.x - 1u)) )
+	if( (x < (chunkDiameter.x - 1u) && (chunk.voxels[voxelIndex + (chunkDiameter.y * chunkDiameter.z)].element == 0)) || (x == (chunkDiameter.x - 1u)) )
 	{
 		UINT indexCount = static_cast<UINT>(vertices.size());
 		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z - radius.z }, { 1.0f, 0.0f, 0.0f }, color } );
@@ -80,7 +81,7 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const std::vector<GGVox
 		indices.push_back( indexCount + 0 );
 	}
 	// Top
-	if( (y < (chunkDiameter.y - 1u) && (voxels[voxelIndex + (chunkDiameter.z)].element == 0)) || (y == (chunkDiameter.y - 1u)) )
+	if( (y < (chunkDiameter.y - 1u) && (chunk.voxels[voxelIndex + (chunkDiameter.z)].element == 0)) || (y == (chunkDiameter.y - 1u)) )
 	{
 		UINT indexCount = static_cast<UINT>(vertices.size());
 		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z - radius.z }, { 0.0f, 1.0f, 0.0f }, color } );
@@ -98,7 +99,7 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const std::vector<GGVox
 	}
 
 	// Back
-	if( (z < (chunkDiameter.z - 1u) && (voxels[voxelIndex + 1].element == 0)) || (z == (chunkDiameter.z - 1u)) )
+	if( (z < (chunkDiameter.z - 1u) && (chunk.voxels[voxelIndex + 1].element == 0)) || (z == (chunkDiameter.z - 1u)) )
 	{
 		UINT indexCount = static_cast<UINT>(vertices.size());
 		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z + radius.z }, { 0.0f, 0.0f, 1.0f }, color } );
@@ -116,7 +117,7 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const std::vector<GGVox
 	}
 
 	// Left
-	if( (x > 0 && (voxels[voxelIndex - (chunkDiameter.y * chunkDiameter.z)].element == 0)) || (x == 0) )
+	if( (x > 0 && (chunk.voxels[voxelIndex - (chunkDiameter.y * chunkDiameter.z)].element == 0)) || (x == 0) )
 	{
 		UINT indexCount = static_cast<UINT>(vertices.size());
 		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z + radius.z }, { -1.0f, 0.0f, 0.0f }, color } );
@@ -134,7 +135,7 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const std::vector<GGVox
 	}
 
 	// Bottom
-	if( (y > 0 && (voxels[voxelIndex - chunkDiameter.z].element == 0)) || (y == 0) )
+	if( (y > 0 && (chunk.voxels[voxelIndex - chunkDiameter.z].element == 0)) || (y == 0) )
 	{
 		UINT indexCount = static_cast<UINT>(vertices.size());
 		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z + radius.z }, { 0.0f, -1.0f, 0.0f }, color } );
@@ -152,7 +153,7 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const std::vector<GGVox
 	}
 
 	// Front
-	if( (z > 0 && (voxels[voxelIndex - 1].element == 0)) || (z == 0) )
+	if( (z > 0 && (chunk.voxels[voxelIndex - 1].element == 0)) || (z == 0) )
 	{
 		UINT indexCount = static_cast<UINT>(vertices.size());
 		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z - radius.z }, { 0.0f, 0.0f, -1.0f }, color } );

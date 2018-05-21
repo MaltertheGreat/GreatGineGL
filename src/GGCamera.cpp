@@ -7,7 +7,7 @@
 
 GGCamera::GGCamera(GGInput& input)
 {
-	float speed = 0.1f;
+	float speed = 0.01f;
 	auto key_pressed_handler = [this, speed](int key) {
 		m_vel = {0.0f, 0.0f, 0.0f};
 		if (key == GLFW_KEY_W)
@@ -19,9 +19,14 @@ GGCamera::GGCamera(GGInput& input)
 			m_vel.x = speed;
 		else if (key == GLFW_KEY_A)
 			m_vel.x = -speed;
+
+		if (key == GLFW_KEY_LEFT_CONTROL)
+			m_vel.y = speed;
+		else if (key == GLFW_KEY_LEFT_SHIFT)
+			m_vel.y = -speed;
 	};
 
-	auto key_released_handler = [this, speed](int key) {
+	auto key_released_handler = [this](int key) {
 		m_vel = {0.0f, 0.0f, 0.0f};
 		if (key == GLFW_KEY_W)
 			m_vel.z = 0.0f;
@@ -32,6 +37,11 @@ GGCamera::GGCamera(GGInput& input)
 			m_vel.x = 0.0f;
 		else if (key == GLFW_KEY_A)
 			m_vel.x = 0.0f;
+
+		if (key == GLFW_KEY_LEFT_CONTROL)
+			m_vel.y = 0.0f;
+		else if (key == GLFW_KEY_LEFT_SHIFT)
+			m_vel.y = 0.0f;
 	};
 
 	auto mouse_moved_handler = [this](double x, double y)

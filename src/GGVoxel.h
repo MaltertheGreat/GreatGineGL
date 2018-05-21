@@ -4,5 +4,5 @@
 
 struct GGVoxel
 {
-	UINT element = 1;
+	UINT element = 0;
 };

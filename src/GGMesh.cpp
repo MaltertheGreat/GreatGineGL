@@ -54,11 +54,17 @@ GGMesh::GGMesh(const std::vector<GGVertex>& vertices, const std::vector<GGIndex>
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GGVertex), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GGVertex), (void*)sizeof(glm::vec3));
+	glEnableVertexAttribArray(1);
 }
 
 void GGMesh::Render()
 {
 	glBindVertexArray(m_vao);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glFrontFace(GL_CW);
+	glDisable(GL_CULL_FACE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawElements(GL_TRIANGLES, m_index_count, GL_UNSIGNED_INT, 0);
 }
