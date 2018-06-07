@@ -13,7 +13,7 @@ GGGraphics::GGGraphics(GLFWwindow* window, GGInput& input) :
 	m_texture("texture.png")
 {
 	glfwSetFramebufferSizeCallback(window, FramebufferSize);
-	glEnable(GL_FRAMEBUFFER_SRGB);
+	//glEnable(GL_FRAMEBUFFER_SRGB);
 }
 
 void GGGraphics::Update(GLFWwindow* window)
@@ -26,11 +26,13 @@ void GGGraphics::Update(GLFWwindow* window)
 	delta += 0.01f;
 	//m_shader.UpdateModelMatrix(glm::translate(glm::mat4(1.0f), {0.0f, 0.0f, distance}));
 	auto world_matrix = glm::mat4(1.0f);;
+	world_matrix = glm::scale(world_matrix, {16.0f, 16.0f, 16.0f});
 	//world_matrix = glm::rotate(world_matrix, delta, {0.0f, 1.0f, 0.0f});
 	m_shader.UpdateModelMatrix(world_matrix);
 	m_shader.UpdateViewProjMatrix(m_camera.GetViewProj());
 
-	m_shader.UpdateLight(m_camera.GetPosition(), {0.5f*sin(delta), 0.5f*cos(delta), -0.1f});
+	//m_shader.UpdateLight(m_camera.GetPosition(), {0.5f*sin(delta), 0.5f*cos(delta), -0.1f});
+	m_shader.UpdateLight(m_camera.GetPosition(), m_camera.GetPosition());
 }
 
 void GGGraphics::Render(GLFWwindow* window)
@@ -46,7 +48,7 @@ void GGGraphics::Render(GLFWwindow* window)
 
 	m_shader.Set();
 	m_texture.Render();
-	m_test_mesh.Render();
+	m_chunk.Render();
 
 	glfwSwapBuffers(window);
 }

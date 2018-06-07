@@ -3,12 +3,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <iostream>
 
 GGCamera::GGCamera(GGInput& input, glm::vec3 pos) :
 	m_pos(pos)
 {
-	float speed = 0.01f;
+	float speed = 0.02f;
 	auto key_pressed_handler = [this, speed](int key) {
 		m_vel = {0.0f, 0.0f, 0.0f};
 		if (key == GLFW_KEY_W)
@@ -25,8 +24,6 @@ GGCamera::GGCamera(GGInput& input, glm::vec3 pos) :
 			m_vel.y = speed;
 		else if (key == GLFW_KEY_LEFT_SHIFT)
 			m_vel.y = -speed;
-
-		std::cerr << "oho";
 	};
 
 	auto key_released_handler = [this](int key) {
@@ -51,7 +48,15 @@ GGCamera::GGCamera(GGInput& input, glm::vec3 pos) :
 	{
 		double scale = 0.001;
 		m_rot.y += x * scale;
+		if (m_rot.y >  2.0f * glm::pi<float>())
+			m_rot.y -= (2.0f * glm::pi<float>());
+		if (m_rot.y < 0.0f)
+			m_rot.y = (2.0f * glm::pi<float>()) + m_rot.y;
 		m_rot.x += y * scale;
+		if (m_rot.x > (0.5f * glm::pi<float>()))
+			m_rot.x = (0.5f * glm::pi<float>());
+		if (m_rot.x < -(0.5f * glm::pi<float>()))
+			m_rot.x = -(0.5f * glm::pi<float>());
 	};
 
 	input.RegisterKeyPressedHandler(key_pressed_handler);
@@ -72,21 +77,26 @@ glm::mat4 GGCamera::GetViewProj() const
 void GGCamera::Update()
 {
 	glm::vec3 front = {
-		sin(m_rot.y),
-		0.0f,
-		cos(m_rot.y)};
+		cos(m_rot.x)*sin(m_rot.y),
+		sin(m_rot.x),
+		cos(m_rot.x)*cos(m_rot.y)};
 	front = glm::normalize(front);
-	glm::vec3 up = {0.0f, 1.0f, 0.0f};
+	glm::vec3 up = {
+		-sin(m_rot.x)*sin(m_rot.y),
+		cos(m_rot.x),
+		-sin(m_rot.x)*cos(m_rot.y)};
+	up = glm::normalize(up);
 	glm::vec3 right = glm::cross(up, front);
+	right = glm::normalize(right);
 
 	m_pos += m_vel.x*right;
 	m_pos += m_vel.y*up;
 	m_pos += m_vel.z*front;
 
-	front.x *= cos(m_rot.x);
+	/*front.x *= cos(m_rot.x);
 	front.y = sin(m_rot.x);
 	front.z *= cos(m_rot.x);
-	front = glm::normalize(front);
+	front = glm::normalize(front);*/
 
 	m_view = glm::lookAtLH(m_pos, m_pos + front, up);
 }

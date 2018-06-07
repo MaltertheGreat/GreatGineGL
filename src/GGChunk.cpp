@@ -5,7 +5,7 @@
 GGChunk GGChunk::GenetateRandom()
 {
 	std::random_device dev;
-	std::bernoulli_distribution dist(0.75);
+	std::bernoulli_distribution dist(0.35);
 
 	GGChunk chunk;
 	for (auto& voxel : chunk.voxels)

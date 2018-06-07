@@ -13,10 +13,10 @@ out vec4 FragColor;
 void main()
 {
 	vec3 color = vec3(1.0f, 0.5f, 0.2f);
-	vec3 light_color = vec3(1.0f, 1.0f, 1.0f);
-	float specular_strength = 0.3f;
+	float specular_strength = 0.8f;
 
 	vec3 light = light_pos - vec3(Position);
+	float power = 1.0f - clamp(dot(light, light) / 16.0f, 0.0f, 1.0f);
 	light = normalize(light);
 
 	vec3 norm = vec3(texture(texture1, TexCoords));
@@ -24,14 +24,15 @@ void main()
 	norm = norm - vec3(1.0f, 1.0f, 1.0f);
 	norm = TBN * norm;
 
-	color = color * dot(norm,  light);
+	float diffuse = dot(norm, light);
 
 	vec3 view = normalize(camera_pos - Position);
 	vec3 reflection = reflect(-light, norm);
+	float specular = pow(max(dot(view, reflection), 0.0), 128);
+	specular = specular_strength * specular;
+	specular = min(2.0f, specular);
 
-	float spec = pow(max(dot(view, reflection), 0.0), 128);
-	vec3 specular = specular_strength * spec * light_color;
-
-	color = color + specular;
+	color = color * diffuse + specular;
+	color = color * power;
 	FragColor = vec4(color, 1.0f);
 }
