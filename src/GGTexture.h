@@ -8,7 +8,7 @@ public:
 	GGTexture(std::string file_name);
 
 public:
-	void Render();
+	unsigned GetID() const;
 
 private:
 	unsigned m_id;

@@ -29,6 +29,7 @@ private:
 	GGShader m_shader;
 	GGCamera m_camera;
 	GGTexture m_texture;
+	GGTexture m_normal_map;
 	GGChunkModel m_chunk;
 	GGMesh m_test_mesh;
 };

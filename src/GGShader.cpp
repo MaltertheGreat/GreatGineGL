@@ -31,6 +31,7 @@ GGShader::GGShader()
 	m_camera_pos = glGetUniformLocation(m_id, "camera_pos");
 	glUseProgram(m_id);
 	glUniform1i(glGetUniformLocation(m_id, "texture1"), 0);
+	glUniform1i(glGetUniformLocation(m_id, "normal_map"), 1);
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
@@ -39,6 +40,14 @@ GGShader::GGShader()
 void GGShader::Set()
 {
 	glUseProgram(m_id);
+}
+
+void GGShader::UpdateTexture(GLint texture, GLint normal)
+{
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, normal);
 }
 
 void GGShader::UpdateModelMatrix(const glm::mat4& model)

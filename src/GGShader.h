@@ -16,6 +16,7 @@ public:
 
 	void Set();
 
+	void UpdateTexture(GLint texture, GLint normal);
 	void UpdateModelMatrix(const glm::mat4& model);
 	void UpdateViewProjMatrix(const glm::mat4& viewProj);
 	void UpdateLight(const glm::vec3& camera_pos, const glm::vec3& light_pos);

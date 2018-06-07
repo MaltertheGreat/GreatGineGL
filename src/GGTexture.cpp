@@ -20,19 +20,18 @@ GGTexture::GGTexture(std::string file_name)
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load(file_name.c_str(), &width, &height, &nrChannels, 0);
 	if (!data)
-    {
+	{
 		throw std::runtime_error("Failed to load texture");
 		stbi_image_free(data);
-    }
+	}
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	//glGenerateMipmap(GL_TEXTURE_2D);
 
-    stbi_image_free(data);
+	stbi_image_free(data);
 }
 
-void GGTexture::Render()
+unsigned GGTexture::GetID() const
 {
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, m_id);
+	return m_id;
 }

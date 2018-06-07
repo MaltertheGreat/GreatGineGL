@@ -10,10 +10,11 @@ static int m_window_height = 600;
 
 GGGraphics::GGGraphics(GLFWwindow* window, GGInput& input) :
 	m_camera(input, {0.0f, 0.0f, -4.0f}),
-	m_texture("texture.png")
+	m_texture("texture1.png"),
+	m_normal_map("texture.png")
 {
 	glfwSetFramebufferSizeCallback(window, FramebufferSize);
-	//glEnable(GL_FRAMEBUFFER_SRGB);
+	glEnable(GL_FRAMEBUFFER_SRGB);
 }
 
 void GGGraphics::Update(GLFWwindow* window)
@@ -33,6 +34,7 @@ void GGGraphics::Update(GLFWwindow* window)
 
 	//m_shader.UpdateLight(m_camera.GetPosition(), {0.5f*sin(delta), 0.5f*cos(delta), -0.1f});
 	m_shader.UpdateLight(m_camera.GetPosition(), m_camera.GetPosition());
+	m_shader.UpdateTexture(m_texture.GetID(), m_normal_map.GetID());
 }
 
 void GGGraphics::Render(GLFWwindow* window)
@@ -47,7 +49,6 @@ void GGGraphics::Render(GLFWwindow* window)
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	m_shader.Set();
-	m_texture.Render();
 	m_chunk.Render();
 
 	glfwSwapBuffers(window);
