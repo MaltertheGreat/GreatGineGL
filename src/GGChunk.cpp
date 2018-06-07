@@ -16,3 +16,13 @@ GGChunk GGChunk::GenetateRandom()
 
 	return chunk;
 }
+GGChunk GGChunk::GenetateFull()
+{
+	GGChunk chunk;
+	for (auto& voxel : chunk.voxels)
+	{
+		voxel.element = 1;
+	}
+
+	return chunk;
+}

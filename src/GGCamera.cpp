@@ -3,9 +3,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtx/rotate_vector.hpp>
+#include <iostream>
 
-GGCamera::GGCamera(GGInput& input)
+GGCamera::GGCamera(GGInput& input, glm::vec3 pos) :
+	m_pos(pos)
 {
 	float speed = 0.01f;
 	auto key_pressed_handler = [this, speed](int key) {
@@ -24,6 +25,8 @@ GGCamera::GGCamera(GGInput& input)
 			m_vel.y = speed;
 		else if (key == GLFW_KEY_LEFT_SHIFT)
 			m_vel.y = -speed;
+
+		std::cerr << "oho";
 	};
 
 	auto key_released_handler = [this](int key) {
@@ -54,6 +57,11 @@ GGCamera::GGCamera(GGInput& input)
 	input.RegisterKeyPressedHandler(key_pressed_handler);
 	input.RegisterKeyReleasedHandler(key_released_handler);
 	input.RegisterMouseMoveHandler(mouse_moved_handler);
+}
+
+glm::vec3 GGCamera::GetPosition() const
+{
+	return m_pos;
 }
 
 glm::mat4 GGCamera::GetViewProj() const

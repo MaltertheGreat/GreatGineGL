@@ -6,10 +6,11 @@ set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
 set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
-set(SOURCES ${SRC_DIR}/main.cpp ${SRC_DIR}/GGApplication.cpp ${SRC_DIR}/GGOGL.cpp ${SRC_DIR}/GGGraphics.cpp ${SRC_DIR}/GGShader.cpp ${SRC_DIR}/GGMesh.cpp ${SRC_DIR}/GGCamera.cpp ${SRC_DIR}/GGInput.cpp ${SRC_DIR}/GGChunk.cpp ${SRC_DIR}/GGChunkModel.cpp)
+set(SOURCES ${SRC_DIR}/main.cpp ${SRC_DIR}/GGApplication.cpp ${SRC_DIR}/GGOGL.cpp ${SRC_DIR}/GGGraphics.cpp ${SRC_DIR}/GGShader.cpp ${SRC_DIR}/GGMesh.cpp ${SRC_DIR}/GGCamera.cpp ${SRC_DIR}/GGInput.cpp ${SRC_DIR}/GGChunk.cpp ${SRC_DIR}/GGChunkModel.cpp ${SRC_DIR}/GGTexture.cpp ${SRC_DIR}/stb_image.cpp)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
+#set(GCC_FLAGS "-Weverything")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${GCC_FLAGS}")
+#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${GCC_FLAGS}")
 
 add_executable(${PROJECT_NAME}  ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE ${SRC_DIR})

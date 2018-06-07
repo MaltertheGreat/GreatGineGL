@@ -61,16 +61,18 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const GGChunk& chunk, s
 	}
 
 	glm::vec3 center = { offset.x + (x*diameter.x), offset.y + (y*diameter.y), offset.z + (z*diameter.z) };
-	glm::vec3 color = {0.8f, 0.1f, 0.0f};
+	glm::vec2 color = {0.8f, 0.1f};
 
 	// Right
 	if( (x < (chunkDiameter.x - 1u) && (chunk.voxels[voxelIndex + (chunkDiameter.y * chunkDiameter.z)].element == 0)) || (x == (chunkDiameter.x - 1u)) )
 	{
+		glm::vec3 normal = {1.0f, 0.0f, 0.0f};
+		glm::vec3 tangent = {0.0f, 0.0f, 1.0f};
 		UINT indexCount = static_cast<UINT>(vertices.size());
-		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z - radius.z }, { 1.0f, 0.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z - radius.z }, { 1.0f, 0.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z + radius.z }, { 1.0f, 0.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z + radius.z }, { 1.0f, 0.0f, 0.0f }, color } );
+		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z - radius.z }, normal, tangent, {0.0f, 0.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z - radius.z }, normal, tangent, {1.0f, 0.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z + radius.z }, normal, tangent, {1.0f, 1.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z + radius.z }, normal, tangent, {0.0f, 1.0f} } );
 
 		indices.push_back( indexCount + 0 );
 		indices.push_back( indexCount + 1 );
@@ -83,11 +85,13 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const GGChunk& chunk, s
 	// Top
 	if( (y < (chunkDiameter.y - 1u) && (chunk.voxels[voxelIndex + (chunkDiameter.z)].element == 0)) || (y == (chunkDiameter.y - 1u)) )
 	{
+		glm::vec3 normal = {0.0f, 1.0f, 0.0f};
+		glm::vec3 tangent = {1.0f, 0.0f, 0.0f};
 		UINT indexCount = static_cast<UINT>(vertices.size());
-		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z - radius.z }, { 0.0f, 1.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z + radius.z }, { 0.0f, 1.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z + radius.z }, { 0.0f, 1.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z - radius.z }, { 0.0f, 1.0f, 0.0f }, color } );
+		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z - radius.z }, normal, tangent, {0.0f, 0.0f} } );
+		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z + radius.z }, normal, tangent, {0.0f, 1.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z + radius.z }, normal, tangent, {1.0f, 1.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z - radius.z }, normal, tangent, {1.0f, 0.0f} } );
 
 		indices.push_back( indexCount + 0 );
 		indices.push_back( indexCount + 1 );
@@ -101,11 +105,13 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const GGChunk& chunk, s
 	// Back
 	if( (z < (chunkDiameter.z - 1u) && (chunk.voxels[voxelIndex + 1].element == 0)) || (z == (chunkDiameter.z - 1u)) )
 	{
+		glm::vec3 normal = {0.0f, 0.0f, 1.0f};
+		glm::vec3 tangent = {-1.0f, 0.0f, 0.0f};
 		UINT indexCount = static_cast<UINT>(vertices.size());
-		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z + radius.z }, { 0.0f, 0.0f, 1.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z + radius.z }, { 0.0f, 0.0f, 1.0f }, color } );
-		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z + radius.z }, { 0.0f, 0.0f, 1.0f }, color } );
-		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z + radius.z }, { 0.0f, 0.0f, 1.0f }, color } );
+		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z + radius.z }, normal, tangent, {0.0f, 0.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z + radius.z }, normal, tangent, {0.0f, 1.0f} } );
+		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z + radius.z }, normal, tangent, {1.0f, 1.0f} } );
+		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z + radius.z }, normal, tangent, {1.0f, 0.0f} } );
 
 		indices.push_back( indexCount + 0 );
 		indices.push_back( indexCount + 1 );
@@ -119,11 +125,13 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const GGChunk& chunk, s
 	// Left
 	if( (x > 0 && (chunk.voxels[voxelIndex - (chunkDiameter.y * chunkDiameter.z)].element == 0)) || (x == 0) )
 	{
+		glm::vec3 normal = {-1.0f, 0.0f, 0.0f};
+		glm::vec3 tangent = {0.0f, 0.0f, -1.0f};
 		UINT indexCount = static_cast<UINT>(vertices.size());
-		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z + radius.z }, { -1.0f, 0.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z + radius.z }, { -1.0f, 0.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z - radius.z }, { -1.0f, 0.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z - radius.z }, { -1.0f, 0.0f, 0.0f }, color } );
+		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z + radius.z }, normal, tangent, {0.0f, 0.0f} } );
+		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z + radius.z }, normal, tangent, {0.0f, 1.0f} } );
+		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z - radius.z }, normal, tangent, {1.0f, 1.0f} } );
+		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z - radius.z }, normal, tangent, {1.0f, 0.0f} } );
 
 		indices.push_back( indexCount + 0 );
 		indices.push_back( indexCount + 1 );
@@ -137,11 +145,13 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const GGChunk& chunk, s
 	// Bottom
 	if( (y > 0 && (chunk.voxels[voxelIndex - chunkDiameter.z].element == 0)) || (y == 0) )
 	{
+		glm::vec3 normal = {0.0f, -1.0f, 0.0f};
+		glm::vec3 tangent = {0.0f, 0.0f, -1.0f};
 		UINT indexCount = static_cast<UINT>(vertices.size());
-		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z + radius.z }, { 0.0f, -1.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z - radius.z }, { 0.0f, -1.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z - radius.z }, { 0.0f, -1.0f, 0.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z + radius.z }, { 0.0f, -1.0f, 0.0f }, color } );
+		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z + radius.z }, normal, tangent, {0.0f, 0.0f} } );
+		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z - radius.z }, normal, tangent, {0.0f, 1.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z - radius.z }, normal, tangent, {1.0f, 1.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z + radius.z }, normal, tangent, {1.0f, 0.0f} } );
 
 		indices.push_back( indexCount + 0 );
 		indices.push_back( indexCount + 1 );
@@ -155,11 +165,13 @@ void GGChunkModel::GenerateVoxel(UINT x, UINT y, UINT z, const GGChunk& chunk, s
 	// Front
 	if( (z > 0 && (chunk.voxels[voxelIndex - 1].element == 0)) || (z == 0) )
 	{
+		glm::vec3 normal = {0.0f, 0.0f, -1.0f};
+		glm::vec3 tangent = {1.0f, 0.0f, 0.0f};
 		UINT indexCount = static_cast<UINT>(vertices.size());
-		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z - radius.z }, { 0.0f, 0.0f, -1.0f }, color } );
-		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z - radius.z }, { 0.0f, 0.0f, -1.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z - radius.z }, { 0.0f, 0.0f, -1.0f }, color } );
-		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z - radius.z }, { 0.0f, 0.0f, -1.0f }, color } );
+		vertices.push_back( { { center.x - radius.x, center.y - radius.y, center.z - radius.z }, normal, tangent, {0.0f, 0.0f} } );
+		vertices.push_back( { { center.x - radius.x, center.y + radius.y, center.z - radius.z }, normal, tangent, {0.0f, 1.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y + radius.y, center.z - radius.z }, normal, tangent, {1.0f, 1.0f} } );
+		vertices.push_back( { { center.x + radius.x, center.y - radius.y, center.z - radius.z }, normal, tangent, {1.0f, 0.0f} } );
 
 		indices.push_back( indexCount + 0 );
 		indices.push_back( indexCount + 1 );

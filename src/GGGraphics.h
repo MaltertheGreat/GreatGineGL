@@ -6,6 +6,7 @@
 #include "GGShader.h"
 #include "GGCamera.h"
 #include "GGMesh.h"
+#include "GGTexture.h"
 
 #include "GGChunkModel.h"
 
@@ -27,6 +28,7 @@ private:
 	GGOGL m_ogl;
 	GGShader m_shader;
 	GGCamera m_camera;
-	GGMesh m_mesh;
+	GGTexture m_texture;
 	GGChunkModel m_chunk;
+	GGMesh m_test_mesh;
 };

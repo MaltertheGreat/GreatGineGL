@@ -24,8 +24,13 @@ GGShader::GGShader()
 		throw std::runtime_error("GGShader");
 	}
 
-	m_modelMatrix = glGetUniformLocation(m_id, "model");
-	m_viewProjMatrix = glGetUniformLocation(m_id, "viewProj");
+	m_modelMatrix = glGetUniformLocation(m_id, "model_matrix");
+	m_viewProjMatrix = glGetUniformLocation(m_id, "view_proj_matrix");
+	m_normal_matrix = glGetUniformLocation(m_id, "normal_matrix");
+	m_light_pos = glGetUniformLocation(m_id, "light_pos");
+	m_camera_pos = glGetUniformLocation(m_id, "camera_pos");
+	glUseProgram(m_id);
+	glUniform1i(glGetUniformLocation(m_id, "texture1"), 0);
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
@@ -39,11 +44,20 @@ void GGShader::Set()
 void GGShader::UpdateModelMatrix(const glm::mat4& model)
 {
 	glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(model));
+
+	glm::mat3 normal_matrix = glm::mat3(glm::transpose(glm::inverse(model)));
+	glUniformMatrix3fv(m_normal_matrix, 1, GL_FALSE, glm::value_ptr(normal_matrix));
 }
 
 void GGShader::UpdateViewProjMatrix(const glm::mat4& viewProj)
 {
 	glUniformMatrix4fv(m_viewProjMatrix, 1, GL_FALSE, glm::value_ptr(viewProj));
+}
+
+void GGShader::UpdateLight(const glm::vec3& camera_pos, const glm::vec3& light_pos)
+{
+	glUniform3fv(m_camera_pos, 1, glm::value_ptr(camera_pos));
+	glUniform3fv(m_light_pos, 1, glm::value_ptr(light_pos));
 }
 
 unsigned GGShader::CompileShader(const std::string& fileName, GLenum shaderType)

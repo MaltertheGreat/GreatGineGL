@@ -9,9 +9,11 @@ static int m_window_width = 800;
 static int m_window_height = 600;
 
 GGGraphics::GGGraphics(GLFWwindow* window, GGInput& input) :
-	m_camera(input)
+	m_camera(input, {0.0f, 0.0f, -4.0f}),
+	m_texture("texture.png")
 {
 	glfwSetFramebufferSizeCallback(window, FramebufferSize);
+	glEnable(GL_FRAMEBUFFER_SRGB);
 }
 
 void GGGraphics::Update(GLFWwindow* window)
@@ -19,19 +21,32 @@ void GGGraphics::Update(GLFWwindow* window)
 	m_camera.Update();
 	m_camera.UpdateProj(45.0f, m_window_width/static_cast<float>(m_window_height), 0.1f, 100.0f);
 
-	m_shader.UpdateModelMatrix(glm::translate(glm::mat4(), {0.0f, 0.0f, 0.0f}));
+	m_shader.Set();
+	static float delta = 0.0f;
+	delta += 0.01f;
+	//m_shader.UpdateModelMatrix(glm::translate(glm::mat4(1.0f), {0.0f, 0.0f, distance}));
+	auto world_matrix = glm::mat4(1.0f);;
+	//world_matrix = glm::rotate(world_matrix, delta, {0.0f, 1.0f, 0.0f});
+	m_shader.UpdateModelMatrix(world_matrix);
 	m_shader.UpdateViewProjMatrix(m_camera.GetViewProj());
+
+	m_shader.UpdateLight(m_camera.GetPosition(), {0.5f*sin(delta), 0.5f*cos(delta), -0.1f});
 }
 
 void GGGraphics::Render(GLFWwindow* window)
 {
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT);
+	glFrontFace(GL_CW);
+	glDisable(GL_CULL_FACE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 	m_shader.Set();
-	m_chunk.Render();
+	m_texture.Render();
+	m_test_mesh.Render();
 
 	glfwSwapBuffers(window);
 }

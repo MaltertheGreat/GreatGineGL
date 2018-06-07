@@ -12,10 +12,10 @@ GGMesh::GGMesh()
 	glGenBuffers(1, &ebo);
 
 	std::vector<GGVertex> vertices = {
-		{{0.5f, 0.5f, 0.5f}}, // top right
-		{{0.5f, -0.5f, 0.0f}}, // bottom right
-		{{-0.5f, -0.5f, 0.0f}}, // bottom left
-		{{-0.5f, 0.5f, -0.5f}} // top left
+		{{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}}, // top right
+		{{0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}, // bottom right
+		{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}, // bottom left
+		{{-0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, -1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}} // top left
 	};
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -32,6 +32,15 @@ GGMesh::GGMesh()
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GGVertex), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GGVertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(GGVertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
+	glEnableVertexAttribArray(2);
+
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(GGVertex), reinterpret_cast<void*>(3 * sizeof(glm::vec3)));
+	glEnableVertexAttribArray(3);
 }
 
 GGMesh::GGMesh(const std::vector<GGVertex>& vertices, const std::vector<GGIndex>& indices)
@@ -55,16 +64,18 @@ GGMesh::GGMesh(const std::vector<GGVertex>& vertices, const std::vector<GGIndex>
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(GGVertex), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GGVertex), (void*)sizeof(glm::vec3));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(GGVertex), reinterpret_cast<void*>(sizeof(glm::vec3)));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(GGVertex), reinterpret_cast<void*>(2 * sizeof(glm::vec3)));
+	glEnableVertexAttribArray(2);
+
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(GGVertex), reinterpret_cast<void*>(3 * sizeof(glm::vec3)));
+	glEnableVertexAttribArray(3);
 }
 
 void GGMesh::Render()
 {
 	glBindVertexArray(m_vao);
-	glFrontFace(GL_CW);
-	glDisable(GL_CULL_FACE);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glDrawElements(GL_TRIANGLES, m_index_count, GL_UNSIGNED_INT, 0);
 }
